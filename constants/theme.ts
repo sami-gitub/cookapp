@@ -1,9 +1,10 @@
 export const theme = {
   colors: {
-    primary: '#50C878', // Emerald Green
-    secondary: '#98FB98', // Mint Green
-    background: '#FAFAFA', // Off-white
-    text: '#1F2937', // Dark gray
-    textLight: '#6B7280', // Gray for subtitles
+    primary: '#1D4ED8', // Modern French Blue
+    accent: '#DC2626', // French Red
+    background: '#FFFFFF', // Pure White
+    surface: '#F3F4F6', // Light gray for cards/pills
+    text: '#111827', // Very dark gray/blue
+    textLight: '#6B7280',
   }
 };

@@ -33,7 +33,7 @@ export default function HomeScreen() {
         </View>
 
         {/* Filter Pills */}
-        <View>
+        <View style={styles.filtersWrapper}>
           <ScrollView 
             horizontal 
             showsHorizontalScrollIndicator={false}
@@ -50,6 +50,31 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </ScrollView>
         </View>
+
+        {/* Trending Recipes */}
+        <Text style={styles.sectionTitle}>Trending Recipes</Text>
+        <ScrollView style={styles.recipesScroll} showsVerticalScrollIndicator={false}>
+          {/* Card 1 */}
+          <View style={styles.recipeCard}>
+            <View style={styles.recipeImagePlaceholder} />
+            <Text style={styles.recipeTitle}>Boeuf Bourguignon</Text>
+            <Text style={styles.recipeSubtitle}>⏱️ 180 mins</Text>
+          </View>
+          
+          {/* Card 2 */}
+          <View style={styles.recipeCard}>
+            <View style={styles.recipeImagePlaceholder} />
+            <Text style={styles.recipeTitle}>Ratatouille</Text>
+            <Text style={styles.recipeSubtitle}>⏱️ 60 mins</Text>
+          </View>
+          
+          {/* Card 3 */}
+          <View style={styles.recipeCard}>
+            <View style={styles.recipeImagePlaceholder} />
+            <Text style={styles.recipeTitle}>Crêpes</Text>
+            <Text style={styles.recipeSubtitle}>⏱️ 20 mins</Text>
+          </View>
+        </ScrollView>
 
       </View>
     </SafeAreaView>
@@ -110,11 +135,14 @@ const styles = StyleSheet.create({
     padding: 8,
     marginLeft: 4,
   },
+  filtersWrapper: {
+    marginBottom: 24,
+  },
   filtersContent: {
     paddingRight: 40,
   },
   pill: {
-    backgroundColor: theme.colors.secondary,
+    backgroundColor: theme.colors.surface,
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 20,
@@ -125,4 +153,40 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
   },
+  sectionTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: theme.colors.text,
+    marginBottom: 16,
+  },
+  recipesScroll: {
+    flex: 1,
+  },
+  recipeCard: {
+    backgroundColor: theme.colors.background,
+    borderRadius: 16,
+    padding: 12,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  recipeImagePlaceholder: {
+    backgroundColor: theme.colors.surface,
+    height: 140,
+    borderRadius: 12,
+    marginBottom: 12,
+  },
+  recipeTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: theme.colors.text,
+    marginBottom: 4,
+  },
+  recipeSubtitle: {
+    fontSize: 14,
+    color: theme.colors.textLight,
+  }
 });
