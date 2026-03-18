@@ -1,7 +1,8 @@
-import React, { useRef } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { CameraView, useCameraPermissions } from 'expo-camera';
+import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 import { theme } from '../constants/theme';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -10,9 +11,11 @@ export default function ScannerScreen() {
   const router = useRouter();
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<CameraView>(null);
+  
+  const [photoUri, setPhotoUri] = useState<string | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
 
   if (!permission) {
-    // Permission status is loading
     return (
       <View style={styles.loadingContainer}>
         <Stack.Screen options={{ headerShown: false }} />
@@ -22,7 +25,6 @@ export default function ScannerScreen() {
   }
 
   if (!permission.granted) {
-    // Permission is denied
     return (
       <View style={styles.permissionContainer}>
         <Stack.Screen options={{ headerShown: false }} />
@@ -38,13 +40,68 @@ export default function ScannerScreen() {
     );
   }
 
-  // Permission is granted
   const takePicture = async () => {
     if (cameraRef.current) {
       const photo = await cameraRef.current.takePictureAsync();
-      console.log('Photo taken URI:', photo?.uri);
+      if (photo?.uri) {
+        setPhotoUri(photo.uri);
+      }
     }
   };
+
+  const handleRetake = () => {
+    setPhotoUri(null);
+  };
+
+  const handleAnalyze = () => {
+    setIsAnalyzing(true);
+    setTimeout(() => {
+      Alert.alert(
+        "Scan Complete", 
+        "Mock AI: Found tomatoes, eggs, and cheese!",
+        [{ text: "OK" }]
+      );
+      setIsAnalyzing(false);
+    }, 2000);
+  };
+
+  if (photoUri) {
+    return (
+      <View style={styles.container}>
+        <Stack.Screen options={{ headerShown: false }} />
+        <Image source={{ uri: photoUri }} style={styles.previewImage} contentFit="cover" />
+        
+        <SafeAreaView style={styles.overlayContainer}>
+          {/* Header Controls for Preview */}
+          <View style={styles.cameraHeader}>
+            {isAnalyzing ? null : (
+              <TouchableOpacity onPress={() => router.back()} style={styles.iconButton}>
+                <Ionicons name="close" size={32} color="#FFFFFF" />
+              </TouchableOpacity>
+            )}
+          </View>
+
+          {isAnalyzing ? (
+            <View style={styles.analyzingOverlay}>
+              <ActivityIndicator size="large" color="#FFFFFF" />
+              <Text style={styles.analyzingText}>Scanning your fridge...</Text>
+            </View>
+          ) : (
+            /* Action Buttons */
+            <View style={styles.previewActions}>
+              <TouchableOpacity style={styles.retakeButton} onPress={handleRetake}>
+                <Text style={styles.retakeButtonText}>Retake</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.analyzeButton} onPress={handleAnalyze}>
+                <Text style={styles.analyzeButtonText}>Analyze Ingredients</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </SafeAreaView>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -155,5 +212,59 @@ const styles = StyleSheet.create({
     height: 56,
     borderRadius: 28,
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
+  },
+  // Preview Styles
+  previewImage: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  overlayContainer: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+  analyzingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  analyzingText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginTop: 16,
+  },
+  previewActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingBottom: 40,
+    gap: 16,
+  },
+  retakeButton: {
+    flex: 1,
+    paddingVertical: 16,
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  retakeButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  analyzeButton: {
+    flex: 2,
+    backgroundColor: theme.colors.primary,
+    paddingVertical: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  analyzeButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
   }
 });
