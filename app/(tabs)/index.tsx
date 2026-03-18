@@ -2,9 +2,12 @@ import React from 'react';
 import { View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import { theme } from '../../constants/theme';
 
 export default function HomeScreen() {
+  const router = useRouter();
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -26,7 +29,10 @@ export default function HomeScreen() {
             <TouchableOpacity style={styles.iconButton}>
               <Ionicons name="mic" size={20} color={theme.colors.textLight} />
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.iconButton, styles.cameraButton]}>
+            <TouchableOpacity 
+              style={[styles.iconButton, styles.cameraButton]}
+              onPress={() => router.push('/scanner')}
+            >
               <Ionicons name="camera" size={20} color="#FFFFFF" />
             </TouchableOpacity>
           </View>
